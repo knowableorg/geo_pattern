@@ -97,7 +97,7 @@ module GeoPattern
 
     def geo_hexagons
       scale       = hex_val(0, 1)
-      side_length = map(scale, 0, 15, 8, 60)
+      side_length = opts[:size] || map(scale, 0, 15, 8, 60)
       hex_height  = side_length * Math.sqrt(3)
       hex_width   = side_length * 2
       hex         = build_hexagon_shape(side_length)
@@ -358,7 +358,7 @@ module GeoPattern
     end
 
     def geo_octogons
-      square_size = map(hex_val(0, 1), 0, 15, 10, 60)
+      square_size = opts[:size] || map(hex_val(0, 1), 0, 15, 10, 60)
       tile        = build_octogon_shape(square_size)
 
       svg.set_width(square_size * 6)
@@ -538,8 +538,8 @@ module GeoPattern
     end
 
     def geo_diamonds
-      diamond_width  = map(hex_val(0, 1), 0, 15, 10, 50)
-      diamond_height = map(hex_val(1, 1), 0, 15, 10, 50)
+      diamond_width  = opts[:size] || opts[:width] || map(hex_val(0, 1), 0, 15, 10, 50)
+      diamond_height = opts[:size] || opts[:height] || map(hex_val(1, 1), 0, 15, 10, 50)
       diamond        = build_diamond_shape(diamond_width, diamond_height)
 
       svg.set_width(diamond_width * 6)
