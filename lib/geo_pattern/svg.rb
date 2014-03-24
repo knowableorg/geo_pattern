@@ -42,6 +42,12 @@ module GeoPattern
       @svg_string << %Q{<polyline points="#{str}" #{write_args(args)} />}
     end
 
+    def wrap_group(args={})
+      @svg_string << %Q{<g #{write_args(args)}>}
+      yield
+      @svg_string << %Q{</g>}
+    end
+
     def group(elements, args={})
       @svg_string << %Q{<g #{write_args(args)}>}
       elements.each {|e| eval e}
@@ -55,7 +61,7 @@ module GeoPattern
           str << %Q{#{key}="}
           value.each {|k, v|
             str << %Q{#{k}:#{v};}
-          } 
+          }
           str << %Q{" }
         else
           str << %Q{#{key}="#{value}" }

@@ -25,6 +25,7 @@ module GeoPattern
       nested_squares
       mosaic_squares
       chevrons
+      stripes
     ].freeze
 
     FILL_COLOR_DARK  = "#222"
@@ -95,6 +96,35 @@ module GeoPattern
       end
     end
 
+    def geo_stripes
+      stripe_width  = opts[:size] || opts[:width] || map(hex_val(0, 1), 0, 15, 10, 50)
+      stripe_height = opts[:size] || opts[:height] || map(hex_val(1, 1), 0, 15, 10, 50)
+
+      svg.set_width(stripe_width * 6)
+      svg.set_height(stripe_height * 3)
+
+      svg.wrap_group(:transform => "rotate(45, #{stripe_width * 3}, #{stripe_height * 1.5})") do
+        i = 0
+        for y in 0..5
+          for x in 0..5
+            val     = hex_val(i, 1)
+            opacity = opacity(val)
+            fill    = fill_color(val)
+
+            styles = {
+              "fill"         => fill,
+              "fill-opacity" => opacity,
+            }
+
+            svg.rect(0, 0, stripe_width, stripe_height, styles.merge({
+              "transform" => "translate(#{x*stripe_width}, #{y*stripe_height - hex_val(x, 1)*(stripe_height / 10)*x})"
+            }))
+            i += 1
+          end
+        end
+      end
+    end
+
     def geo_hexagons
       scale       = hex_val(0, 1)
       side_length = opts[:size] || map(scale, 0, 15, 8, 60)
@@ -133,7 +163,7 @@ module GeoPattern
             svg.polyline(hex, styles.merge({"transform" => "translate(#{x*side_length*1.5 - hex_width/2}, #{dy - hex_height/2})"}))
           end
 
-           # Add an extra one at bottom-right, for tiling.
+          # Add an extra one at bottom-right, for tiling.
           if (x == 0 && y == 0)
             svg.polyline(hex, styles.merge({"transform" => "translate(#{6*side_length*1.5 - hex_width/2}, #{5*hex_height + hex_height/2})"}))
           end
