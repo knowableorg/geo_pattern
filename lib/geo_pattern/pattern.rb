@@ -39,7 +39,7 @@ module GeoPattern
 
     def initialize(string, opts={})
       @opts = DEFAULTS.merge(opts)
-      @hash = Digest::SHA1.hexdigest string
+      @hash = (Digest::SHA1.hexdigest(string)) * 2
       @svg  = SVG.new
       generate_background
       generate_pattern
@@ -100,13 +100,13 @@ module GeoPattern
       stripe_width  = opts[:size] || opts[:width] || map(hex_val(0, 1), 0, 15, 10, 50)
       stripe_height = opts[:size] || opts[:height] || map(hex_val(1, 1), 0, 15, 10, 50)
 
-      svg.set_width(stripe_width * 6)
+      svg.set_width(stripe_width * 20)
       svg.set_height(stripe_height * 3)
 
-      svg.wrap_group(:transform => "rotate(45, #{stripe_width * 3}, #{stripe_height * 1.5})") do
+      svg.wrap_group(:transform => "rotate(45, #{stripe_width * 10}, #{stripe_height * 1.5})") do
         i = 0
         for y in 0..5
-          for x in 0..5
+          for x in 0..10
             val     = hex_val(i, 1)
             opacity = opacity(val)
             fill    = fill_color(val)
